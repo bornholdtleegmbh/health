@@ -2,6 +2,8 @@
 
 Enables reading and writing health data from/to [Apple Health](https://www.apple.com/health/) and [Google Health Connect](https://health.google/health-connect-android/).
 
+If you are using this fork, see [Fork Notes](FORK_NOTES.md) for the local changes that should survive upstream updates.
+
 > **NOTE:** Google has deprecated the Google Fit API. According to the [documentation](https://developers.google.com/fit/android), as of **May 1st 2024** developers cannot sign up for using the API. As such, this package has removed support for Google Fit as of version 11.0.0 and users are urged to upgrade as soon as possible.
 
 The plugin supports:

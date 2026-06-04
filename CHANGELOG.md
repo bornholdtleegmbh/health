@@ -1,3 +1,9 @@
+## Fork notes
+
+This fork keeps its durable change log in [FORK_NOTES.md](./FORK_NOTES.md).
+
+Use this file for release-style history, and use `FORK_NOTES.md` for local patches that should not get lost when upstream changes are merged in.
+
 ## 13.3.1
 
 * iOS: Fix issues with app crashing on iOS 15
