@@ -150,5 +150,14 @@ void main() {
 
       expect(authorized, isTrue);
     });
+
+    test('isMindfulnessAvailable returns channel value', () async {
+      ctx.channel.when('getHealthConnectSdkStatus', HealthConnectSdkStatus.sdkAvailable.nativeValue);
+      ctx.channel.when('isMindfulnessAvailable', true);
+
+      final available = await ctx.health.isMindfulnessAvailable();
+
+      expect(available, isTrue);
+    });
   });
 }

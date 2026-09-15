@@ -184,6 +184,20 @@ class HealthDataOperations(
     }
 
     /**
+     * Checks if Mindfulness Sessions are available on the current device.
+     * Availability is device-specific and exposed via Health Connect features.
+     */
+    fun isMindfulnessAvailable(call: MethodCall, result: Result) {
+        scope.launch {
+            result.success(
+                    healthConnectClient.features.getFeatureStatus(
+                            HealthConnectFeatures.FEATURE_MINDFULNESS_SESSION
+                    ) == HealthConnectFeatures.FEATURE_STATUS_AVAILABLE
+            )
+        }
+    }
+
+    /**
      * Deletes all health records of a specified type within a given time range. Performs bulk
      * deletion based on data type and time window.
      *

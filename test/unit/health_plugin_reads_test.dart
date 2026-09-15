@@ -41,6 +41,21 @@ void main() {
       expect(args['recordingMethodsToFilter'], [RecordingMethod.manual.toInt()]);
     });
 
+    test('getHealthDataFromTypes forwards mindfulness sessions', () async {
+      ctx.channel.when('getData', [HealthFixtures.numericPoint()]);
+
+      final result = await ctx.health.getHealthDataFromTypes(
+        types: [HealthDataType.MINDFULNESS],
+        startTime: HealthFixtures.start,
+        endTime: HealthFixtures.end,
+      );
+
+      expect(result.single.type, HealthDataType.MINDFULNESS);
+      final call = ctx.channel.lastCallFor('getData');
+      final args = Map<String, dynamic>.from(call!.arguments as Map);
+      expect(args['dataTypeKey'], HealthDataType.MINDFULNESS.name);
+    });
+
     test('getHealthDataByUUID throws when UUID is empty', () {
       expect(
         () => ctx.health.getHealthDataByUUID(uuid: '', type: HealthDataType.HEART_RATE),

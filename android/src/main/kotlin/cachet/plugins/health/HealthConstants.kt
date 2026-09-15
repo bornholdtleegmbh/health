@@ -59,6 +59,7 @@ object HealthConstants {
     const val SLEEP_REM = "SLEEP_REM"
     const val SLEEP_SESSION = "SLEEP_SESSION"
     const val SLEEP_UNKNOWN = "SLEEP_UNKNOWN"
+    const val MINDFULNESS = "MINDFULNESS"
 
     // Activity type
     const val WORKOUT = "WORKOUT"
@@ -97,6 +98,7 @@ object HealthConstants {
         SLEEP_OUT_OF_BED to SleepSessionRecord::class,
         SLEEP_SESSION to SleepSessionRecord::class,
         SLEEP_UNKNOWN to SleepSessionRecord::class,
+        MINDFULNESS to MindfulnessSessionRecord::class,
         WORKOUT to ExerciseSessionRecord::class,
         NUTRITION to NutritionRecord::class,
         RESTING_HEART_RATE to RestingHeartRateRecord::class,

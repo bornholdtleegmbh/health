@@ -73,15 +73,17 @@ class Health {
       Platform.isAndroid ? dataTypeKeysAndroid.contains(dataType) : dataTypeKeysIOS.contains(dataType);
 
   /// Check if a given data type is available on this device.
-  /// Currently only needed for Android Skin Temperature support.
+  /// Currently needed for Android Skin Temperature and Mindfulness support.
   Future<void> _checkIfDataTypeAvailableOnDevice(HealthDataType dataType) async {
     if (!Platform.isAndroid) return;
 
-    if (dataType == HealthDataType.SKIN_TEMPERATURE) {
-      final available = await isSkinTemperatureAvailable();
-      if (!available) {
-        throw HealthException(dataType, 'Not available on this Android device');
-      }
+    final available = switch (dataType) {
+      HealthDataType.SKIN_TEMPERATURE => await isSkinTemperatureAvailable(),
+      HealthDataType.MINDFULNESS => await isMindfulnessAvailable(),
+      _ => true,
+    };
+    if (!available) {
+      throw HealthException(dataType, 'Not available on this Android device');
     }
   }
 
@@ -337,6 +339,26 @@ class Health {
       return available ?? false;
     } catch (e) {
       debugPrint('$runtimeType - Exception in isSkinTemperatureAvailable(): $e');
+      return false;
+    }
+  }
+
+  /// Checks whether Mindfulness Sessions are available on this Android device.
+  ///
+  /// Android only. Returns false on iOS or if an error occurs.
+  Future<bool> isMindfulnessAvailable() async {
+    if (Platform.isIOS) return false;
+
+    try {
+      final status = await getHealthConnectSdkStatus();
+      if (status != HealthConnectSdkStatus.sdkAvailable) {
+        return false;
+      }
+
+      final available = await _channel.invokeMethod<bool>('isMindfulnessAvailable');
+      return available ?? false;
+    } catch (e) {
+      debugPrint('$runtimeType - Exception in isMindfulnessAvailable(): $e');
       return false;
     }
   }
