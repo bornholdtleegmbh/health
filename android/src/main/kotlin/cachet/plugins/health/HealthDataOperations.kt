@@ -183,10 +183,7 @@ class HealthDataOperations(
         }
     }
 
-    /**
-     * Checks if Mindfulness Sessions are available on the current device.
-     * Availability is device-specific and exposed via Health Connect features.
-     */
+    /** Checks whether Mindfulness Sessions are available on this device. */
     fun isMindfulnessAvailable(call: MethodCall, result: Result) {
         scope.launch {
             result.success(

@@ -59,6 +59,7 @@ object HealthConstants {
     const val SLEEP_REM = "SLEEP_REM"
     const val SLEEP_SESSION = "SLEEP_SESSION"
     const val SLEEP_UNKNOWN = "SLEEP_UNKNOWN"
+
     const val MINDFULNESS = "MINDFULNESS"
 
     // Activity type

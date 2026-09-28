@@ -4,6 +4,13 @@ This fork keeps its durable change log in [FORK_NOTES.md](./FORK_NOTES.md).
 
 Use this file for release-style history, and use `FORK_NOTES.md` for local patches that should not get lost when upstream changes are merged in.
 
+## 13.3.2
+
+* Write data now returns UUID of records - PR [#448](https://github.com/carp-dk/carp-health-flutter/pull/448)
+* Fix [#502](https://github.com/carp-dk/carp-health-flutter/issues/502)
+* iOS: Fix [#480](https://github.com/carp-dk/carp-health-flutter/issues/480) - PR [#504](https://github.com/carp-dk/carp-health-flutter/pull/504) - the native plugin class is now `HealthPlugin` (previously `SwiftHealthPlugin` behind an Objective-C shim) - apps using the generated plugin registrant are unaffected
+* iOS: Raise the minimum deployment target to 15.0
+
 ## 13.3.1
 
 * iOS: Fix issues with app crashing on iOS 15
