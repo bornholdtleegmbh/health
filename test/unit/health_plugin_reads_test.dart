@@ -19,27 +19,32 @@ void main() {
   });
 
   group('Read APIs', () {
-    test('getHealthDataFromTypes forwards preferred units and filters', () async {
-      ctx.channel.when('getData', [HealthFixtures.numericPoint()]);
+    test(
+      'getHealthDataFromTypes forwards preferred units and filters',
+      () async {
+        ctx.channel.when('getData', [HealthFixtures.numericPoint()]);
 
-      final result = await ctx.health.getHealthDataFromTypes(
-        types: [HealthDataType.HEART_RATE],
-        preferredUnits: {HealthDataType.HEART_RATE: HealthDataUnit.COUNT},
-        startTime: HealthFixtures.start,
-        endTime: HealthFixtures.end,
-        recordingMethodsToFilter: [RecordingMethod.manual],
-      );
+        final result = await ctx.health.getHealthDataFromTypes(
+          types: [HealthDataType.HEART_RATE],
+          preferredUnits: {HealthDataType.HEART_RATE: HealthDataUnit.COUNT},
+          startTime: HealthFixtures.start,
+          endTime: HealthFixtures.end,
+          recordingMethodsToFilter: [RecordingMethod.manual],
+        );
 
-      expect(result, hasLength(1));
-      expect(result.first.value, isA<NumericHealthValue>());
+        expect(result, hasLength(1));
+        expect(result.first.value, isA<NumericHealthValue>());
 
-      final call = ctx.channel.lastCallFor('getData');
-      expect(call, isNotNull);
-      final args = Map<String, dynamic>.from(call!.arguments as Map);
-      expect(args['dataTypeKey'], HealthDataType.HEART_RATE.name);
-      expect(args['dataUnitKey'], HealthDataUnit.COUNT.name);
-      expect(args['recordingMethodsToFilter'], [RecordingMethod.manual.toInt()]);
-    });
+        final call = ctx.channel.lastCallFor('getData');
+        expect(call, isNotNull);
+        final args = Map<String, dynamic>.from(call!.arguments as Map);
+        expect(args['dataTypeKey'], HealthDataType.HEART_RATE.name);
+        expect(args['dataUnitKey'], HealthDataUnit.COUNT.name);
+        expect(args['recordingMethodsToFilter'], [
+          RecordingMethod.manual.toInt(),
+        ]);
+      },
+    );
 
     test('getHealthDataFromTypes forwards mindfulness sessions', () async {
       ctx.channel.when('getData', [HealthFixtures.numericPoint()]);
@@ -58,7 +63,10 @@ void main() {
 
     test('getHealthDataByUUID throws when UUID is empty', () {
       expect(
-        () => ctx.health.getHealthDataByUUID(uuid: '', type: HealthDataType.HEART_RATE),
+        () => ctx.health.getHealthDataByUUID(
+          uuid: '',
+          type: HealthDataType.HEART_RATE,
+        ),
         throwsA(isA<HealthException>()),
       );
     });
@@ -97,7 +105,9 @@ void main() {
       expect(call, isNotNull);
       final args = Map<String, dynamic>.from(call!.arguments as Map);
       expect(args['interval'], 30);
-      expect(args['recordingMethodsToFilter'], [RecordingMethod.automatic.toInt()]);
+      expect(args['recordingMethodsToFilter'], [
+        RecordingMethod.automatic.toInt(),
+      ]);
     });
 
     test('getHealthAggregateDataFromTypes forwards aggregate query', () async {
@@ -121,21 +131,26 @@ void main() {
       expect(args['activitySegmentDuration'], 60);
     });
 
-    test('getTotalStepsInInterval includes manual filter when disabled', () async {
-      ctx.channel.when('getTotalStepsInInterval', 1234);
+    test(
+      'getTotalStepsInInterval includes manual filter when disabled',
+      () async {
+        ctx.channel.when('getTotalStepsInInterval', 1234);
 
-      final total = await ctx.health.getTotalStepsInInterval(
-        HealthFixtures.start,
-        HealthFixtures.end,
-        includeManualEntry: false,
-      );
+        final total = await ctx.health.getTotalStepsInInterval(
+          HealthFixtures.start,
+          HealthFixtures.end,
+          includeManualEntry: false,
+        );
 
-      expect(total, 1234);
-      final call = ctx.channel.lastCallFor('getTotalStepsInInterval');
-      expect(call, isNotNull);
-      final args = Map<String, dynamic>.from(call!.arguments as Map);
-      expect(args['recordingMethodsToFilter'], [RecordingMethod.manual.toInt()]);
-    });
+        expect(total, 1234);
+        final call = ctx.channel.lastCallFor('getTotalStepsInInterval');
+        expect(call, isNotNull);
+        final args = Map<String, dynamic>.from(call!.arguments as Map);
+        expect(args['recordingMethodsToFilter'], [
+          RecordingMethod.manual.toInt(),
+        ]);
+      },
+    );
 
     test('removeDuplicates removes identical points', () {
       final point = HealthDataPoint(

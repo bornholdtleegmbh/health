@@ -31,27 +31,37 @@ void main() {
     test('hasPermissions forwards default permissions', () async {
       ctx.channel.when('hasPermissions', true);
 
-      final result = await ctx.health.hasPermissions(
-        [HealthDataType.HEART_RATE, HealthDataType.WEIGHT],
-      );
+      final result = await ctx.health.hasPermissions([
+        HealthDataType.HEART_RATE,
+        HealthDataType.WEIGHT,
+      ]);
 
       expect(result, isTrue);
       final call = ctx.channel.lastCallFor('hasPermissions');
       expect(call, isNotNull);
       final args = Map<String, dynamic>.from(call!.arguments as Map);
-      expect(args['types'], [HealthDataType.HEART_RATE.name, HealthDataType.WEIGHT.name]);
-      expect(args['permissions'], [HealthDataAccess.READ.index, HealthDataAccess.READ.index]);
+      expect(args['types'], [
+        HealthDataType.HEART_RATE.name,
+        HealthDataType.WEIGHT.name,
+      ]);
+      expect(args['permissions'], [
+        HealthDataAccess.READ.index,
+        HealthDataAccess.READ.index,
+      ]);
     });
 
-    test('requestAuthorization throws when permissions length mismatches types', () {
-      expect(
-        () => ctx.health.requestAuthorization(
-          [HealthDataType.HEART_RATE],
-          permissions: [HealthDataAccess.READ, HealthDataAccess.WRITE],
-        ),
-        throwsA(isA<ArgumentError>()),
-      );
-    });
+    test(
+      'requestAuthorization throws when permissions length mismatches types',
+      () {
+        expect(
+          () => ctx.health.requestAuthorization(
+            [HealthDataType.HEART_RATE],
+            permissions: [HealthDataAccess.READ, HealthDataAccess.WRITE],
+          ),
+          throwsA(isA<ArgumentError>()),
+        );
+      },
+    );
 
     test('requestAuthorization rejects write access for read-only types', () {
       expect(
@@ -89,7 +99,10 @@ void main() {
 
   group('Availability', () {
     test('getHealthConnectSdkStatus maps native status', () async {
-      ctx.channel.when('getHealthConnectSdkStatus', HealthConnectSdkStatus.sdkAvailable.nativeValue);
+      ctx.channel.when(
+        'getHealthConnectSdkStatus',
+        HealthConnectSdkStatus.sdkAvailable.nativeValue,
+      );
 
       final status = await ctx.health.getHealthConnectSdkStatus();
 
@@ -119,13 +132,17 @@ void main() {
       expect(authorized, isTrue);
     });
 
-    test('requestHealthDataHistoryAuthorization returns channel value', () async {
-      ctx.channel.when('requestHealthDataHistoryAuthorization', true);
+    test(
+      'requestHealthDataHistoryAuthorization returns channel value',
+      () async {
+        ctx.channel.when('requestHealthDataHistoryAuthorization', true);
 
-      final authorized = await ctx.health.requestHealthDataHistoryAuthorization();
+        final authorized = await ctx.health
+            .requestHealthDataHistoryAuthorization();
 
-      expect(authorized, isTrue);
-    });
+        expect(authorized, isTrue);
+      },
+    );
 
     test('isHealthDataInBackgroundAvailable returns channel value', () async {
       ctx.channel.when('isHealthDataInBackgroundAvailable', true);
@@ -143,16 +160,23 @@ void main() {
       expect(authorized, isTrue);
     });
 
-    test('requestHealthDataInBackgroundAuthorization returns channel value', () async {
-      ctx.channel.when('requestHealthDataInBackgroundAuthorization', true);
+    test(
+      'requestHealthDataInBackgroundAuthorization returns channel value',
+      () async {
+        ctx.channel.when('requestHealthDataInBackgroundAuthorization', true);
 
-      final authorized = await ctx.health.requestHealthDataInBackgroundAuthorization();
+        final authorized = await ctx.health
+            .requestHealthDataInBackgroundAuthorization();
 
-      expect(authorized, isTrue);
-    });
+        expect(authorized, isTrue);
+      },
+    );
 
     test('isMindfulnessAvailable returns channel value', () async {
-      ctx.channel.when('getHealthConnectSdkStatus', HealthConnectSdkStatus.sdkAvailable.nativeValue);
+      ctx.channel.when(
+        'getHealthConnectSdkStatus',
+        HealthConnectSdkStatus.sdkAvailable.nativeValue,
+      );
       ctx.channel.when('isMindfulnessAvailable', true);
 
       final available = await ctx.health.isMindfulnessAvailable();
