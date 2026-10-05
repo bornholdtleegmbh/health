@@ -31,6 +31,14 @@ Use one section per forked version so it is always clear what changed and why.
 
 - Mindfulness support needs a device capability check because Health Connect availability is device-specific.
 
+## 13.3.2-fork.2
+
+### Android mindfulness reads
+
+- Registers `MINDFULNESS` in the Android-supported data types.
+- Allows supported devices to read mindfulness sessions after granting permission instead of failing the Dart platform availability check.
+- Adds a regression test for the Android registration and minutes unit.
+
 ## Upstream 13.3.1 → 13.3.2
 
 The upstream release preserved in this fork includes:
