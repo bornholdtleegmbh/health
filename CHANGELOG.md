@@ -4,6 +4,23 @@ This fork keeps its durable change log in [FORK_NOTES.md](./FORK_NOTES.md).
 
 Use this file for release-style history, and use `FORK_NOTES.md` for local patches that should not get lost when upstream changes are merged in.
 
+## Unreleased — fork sleep reads
+
+- Add `getSleepSamples()` for iOS. It reads full asleep and awake records, even when a sleep starts before the requested time range. It keeps the original source and device information.
+- Add `getSleepSessions()` for Android. Each session is returned together with its own sleep stages and record ID. All pages are read before a result is returned.
+- These new methods throw read errors. A failed read is not reported as an empty list or a partial result.
+- Missing sleep stages stay missing. The plugin does not estimate asleep time from the length of a session, time in bed, or a gap between records.
+- Allow `device_info_plus` 12.3 and 13. This lets apps keep compatible storage packages that still require version 12.
+- Existing read methods keep their current behavior. Apps can adopt the new methods without changing other health reads.
+- See `FORK_NOTES.md` for the full explanation and older fork changes that were missing from the change log.
+
+## Earlier fork features — documentation added
+
+- Health Connect change tokens let an app read added, updated, and deleted records. Responses include a next token, a more-pages flag, and an expired-token flag. Apps must handle these when keeping a local copy of health data. The app's own upserts are excluded by default.
+- Supported Android writes accept a client record ID and version. Apps can identify repeated uploads and update their own records. `deleteByClientRecordId()` also supports deleting by an app's ID.
+- Android mindfulness reads use native mindfulness sessions and return their recorded duration in minutes. Device availability and permissions still apply.
+- The fork includes a shared channel test harness, device-info stubs, unit tests, and device integration examples.
+
 ## 13.3.2
 
 * Write data now returns UUID of records - PR [#448](https://github.com/carp-dk/carp-health-flutter/pull/448)
