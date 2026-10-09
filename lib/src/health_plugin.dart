@@ -1379,6 +1379,43 @@ class Health {
     return result;
   }
 
+  /// Reads HealthKit asleep and awake samples with their original source and
+  /// device identity. Includes complete connected recordings before [startTime]
+  /// so sleep crossing the query boundary is not cut short. In-bed is excluded.
+  ///
+  /// iOS only. Request sleep read access first. Denied HealthKit read access is
+  /// indistinguishable from no data. Read errors are thrown, never hidden.
+  Future<List<HealthSleepSample>> getSleepSamples({required DateTime startTime, required DateTime endTime}) async {
+    final records = await _sleepRecords('getSleepSamples', startTime, endTime);
+    return records.map((record) => HealthSleepSample.fromMethodChannel(record)).toList();
+  }
+
+  /// Reads complete Health Connect sessions ending in [startTime, endTime],
+  /// including their own stages in the same response. Requires READ_SLEEP.
+  ///
+  /// Android only. Reads all pages of the permitted history to include long
+  /// sessions. Failed pages throw instead of returning incomplete results.
+  /// Empty stages remain empty; session length is not a measured asleep value.
+  Future<List<HealthSleepSession>> getSleepSessions({required DateTime startTime, required DateTime endTime}) async {
+    await _checkIfHealthConnectAvailableOnAndroid();
+    final records = await _sleepRecords('getSleepSessions', startTime, endTime);
+    return records.map((record) => HealthSleepSession.fromMethodChannel(record)).toList();
+  }
+
+  Future<List<Map<dynamic, dynamic>>> _sleepRecords(String method, DateTime start, DateTime end) async {
+    if (start.isAfter(end)) {
+      throw ArgumentError('Sleep startTime must not be after endTime.');
+    }
+    final records = await _channel.invokeListMethod<Object?>(method, {
+      'startTime': start.millisecondsSinceEpoch,
+      'endTime': end.millisecondsSinceEpoch,
+    });
+    if (records == null) {
+      throw const FormatException('Missing native sleep response');
+    }
+    return records.map((record) => record as Map<dynamic, dynamic>).toList();
+  }
+
   /// Fetch a list of health data points based on [types].
   /// You can also specify the [recordingMethodsToFilter] to filter the data points.
   /// If not specified, all data points will be included.

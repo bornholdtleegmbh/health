@@ -33,6 +33,8 @@ This folder contains the reusable test harness, fixtures, and templates for the 
 - `Health.isHealthDataInBackgroundAvailable`
 - `Health.isHealthDataInBackgroundAuthorized`
 - `Health.requestHealthDataInBackgroundAuthorization`
+- `Health.getSleepSamples`
+- `Health.getSleepSessions`
 - `Health.getHealthDataFromTypes`
 - `Health.getHealthIntervalDataFromTypes`
 - `Health.getHealthAggregateDataFromTypes`

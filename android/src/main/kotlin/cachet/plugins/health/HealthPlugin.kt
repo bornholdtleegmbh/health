@@ -39,6 +39,7 @@ class HealthPlugin(private var channel: MethodChannel? = null) :
     private var isReplySubmitted = false
 
     // Helper classes
+    private lateinit var sleepReader: HealthSleepReader
     private lateinit var dataReader: HealthDataReader
     private lateinit var dataWriter: HealthDataWriter
     private lateinit var dataOperations: HealthDataOperations
@@ -155,6 +156,13 @@ class HealthPlugin(private var channel: MethodChannel? = null) :
                     dataOperations.isMindfulnessAvailable(call, result)
 
             // Reading data
+            "getSleepSessions" -> {
+                if (!healthConnectAvailable || !this::sleepReader.isInitialized) {
+                    result.error("HEALTH_UNAVAILABLE", "Health Connect is unavailable", null)
+                } else {
+                    sleepReader.getSleepSessions(call, result)
+                }
+            }
             "getData" -> dataReader.getData(call, result)
             "getDataByUUID" -> dataReader.getDataByUUID(call, result)
             "getIntervalData" -> dataReader.getIntervalData(call, result)
@@ -245,6 +253,7 @@ class HealthPlugin(private var channel: MethodChannel? = null) :
      */
     private fun initializeHelpers() {
         dataConverter = HealthDataConverter()
+        sleepReader = HealthSleepReader(healthConnectClient, scope)
         dataReader = HealthDataReader(healthConnectClient, scope, context!!, dataConverter)
         dataWriter = HealthDataWriter(healthConnectClient, scope)
         dataOperations =

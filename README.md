@@ -300,6 +300,19 @@ flutter: Health Plugin Error:
 flutter:  PlatformException(FlutterHealth, Results are null, Optional(Error Domain=com.apple.healthkit Code=6 "Protected health data is inaccessible" UserInfo={NSLocalizedDescription=Protected health data is inaccessible}))
 ```
 
+### Read complete sleep records (fork API)
+
+Request read access for sleep first. On iOS, use `getSleepSamples()` to read full asleep and awake samples with their source and device information. The result also includes earlier connected samples, so a sleep crossing the start of the query is not cut short. It does not include time in bed.
+
+On Android, use `getSleepSessions()` to read sessions whose end is between the requested start and end (both inclusive). Each session contains its own stages. Empty stages do not mean the whole session was spent asleep. The reader handles all pages of the permitted history.
+
+```dart
+final samples = await health.getSleepSamples(startTime: start, endTime: end); // iOS
+final sessions = await health.getSleepSessions(startTime: start, endTime: end); // Android
+```
+
+These methods throw read errors instead of returning incomplete data. They do not select a main sleep, infer missing stages, or decide which day a sleep belongs to. Keep that policy in the app. HealthKit hides denied read access, so an empty iOS result can also mean that access was not granted.
+
 ### Fetch single health data by UUID
 
 In order to retrieve a single record, it is required to provide `String uuid` and `HealthDataType type`.

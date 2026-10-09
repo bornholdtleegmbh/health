@@ -29,6 +29,8 @@ public class HealthPlugin: NSObject, FlutterPlugin {
         characteristicsTypesDict: characteristicsTypesDict
     )
 
+    private lazy var healthSleepReader = HealthSleepReader(store: healthStore)
+
     private lazy var healthDataWriter: HealthDataWriter = .init(
         healthStore: healthStore,
         dataTypesDict: dataTypesDict,
@@ -66,6 +68,9 @@ public class HealthPlugin: NSObject, FlutterPlugin {
                                     message: "Error requesting authorization: \(error.localizedDescription)",
                                     details: nil))
             }
+
+        case "getSleepSamples":
+            healthSleepReader.getSleepSamples(call: call, result: result)
 
         case "getData":
             healthDataReader.getData(call: call, result: result)
